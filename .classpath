@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="google-api-client-jackson2-1.21.0.jar"/>
 	<classpathentry kind="lib" path="google-api-client-java6-1.21.0.jar"/>
 	<classpathentry kind="lib" path="google-api-client-protobuf-1.21.0.jar"/>
-	<classpathentry kind="lib" path="google-api-client-servlet-1.21.0.jar"/>
 	<classpathentry kind="lib" path="google-api-client-xml-1.21.0.jar"/>
 	<classpathentry kind="lib" path="google-http-client-1.21.0.jar"/>
 	<classpathentry kind="lib" path="google-http-client-android-1.21.0.jar"/>
@@ -40,5 +39,6 @@
 	<classpathentry kind="lib" path="transaction-api-1.1.jar"/>
 	<classpathentry kind="lib" path="xpp3-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="google-api-services-drive-v3-rev6-1.20.0.jar"/>
+	<classpathentry kind="lib" path="/Users/fernando/Work/Apps/liferay-portal-6.2-ce-ga5/tomcat-7.0.62/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

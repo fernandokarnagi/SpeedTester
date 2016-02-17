@@ -1,8 +1,11 @@
 package fits.speedtester;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +15,7 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -24,11 +28,10 @@ import com.google.api.services.drive.model.FileList;
 public class GoogleDrive {
 
 	/** Application name. */
-	private static final String APPLICATION_NAME = "Drive API Java Quickstart";
+	private static final String APPLICATION_NAME = "FKJavaApp";
 
 	/** Directory to store user credentials for this application. */
-	private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
-			".credentials/drive-java-quickstart.json");
+	private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"), ".credentials/fkjavaapp.json");
 
 	/** Global instance of the {@link FileDataStoreFactory}. */
 	private static FileDataStoreFactory DATA_STORE_FACTORY;
@@ -45,7 +48,9 @@ public class GoogleDrive {
 	 * If modifying these scopes, delete your previously saved credentials at
 	 * ~/.credentials/drive-java-quickstart.json
 	 */
-	private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_METADATA_READONLY);
+	// private static final List<String> SCOPES =
+	// Arrays.asList(DriveScopes.DRIVE_METADATA_READONLY);
+	private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_FILE);
 
 	static {
 		try {
@@ -65,7 +70,8 @@ public class GoogleDrive {
 	 */
 	public static Credential authorize() throws IOException {
 		// Load client secrets.
-		InputStream in = GoogleDrive.class.getResourceAsStream("/client_secret.json");
+		InputStream in = GoogleDrive.class
+				.getResourceAsStream("/client_secret_733756896586-8g9kphpt1e4k0de6a87d71441kkhr3f8.apps.googleusercontent.com.json");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
 		// Build flow and trigger user authorization request.
@@ -87,12 +93,33 @@ public class GoogleDrive {
 		return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
 	}
 
-	public static void main(String[] args) throws IOException {
-		// Build a new authorized API client service.
-		Drive service = getDriveService();
+	public static void main(String args[]) throws Exception {
+		Drive driveService = getDriveService();
 
+		String fileId = "0ByVA6ZCEKtF2VVZNWXBTNjlGcVk";
+		OutputStream outputStream = new FileOutputStream("/Users/fernando/Work/Apps/SP/sample_zip_out.zip");
+		driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
+
+	}
+
+	public static void main_upload(String args[]) throws Exception {
+		Drive driveService = getDriveService();
+		File fileMetadata = new File();
+		fileMetadata.setName("sample_zip");
+		fileMetadata.setMimeType("application/zip");
+
+		java.io.File filePath = new java.io.File("/Users/fernando/Work/Apps/SP/sample_zip.zip");
+		FileContent mediaContent = new FileContent("application/zip", filePath);
+		File file = driveService.files().create(fileMetadata, mediaContent).setFields("id").execute();
+		System.out.println("File ID: " + file.getId());
+	}
+
+	public static void main_list(String[] args) throws IOException {
+		// Build a new authorized API client service.    
+		Drive service = getDriveService();
+  
 		// Print the names and IDs for up to 10 files.
-		FileList result = service.files().list().setPageSize(10).setFields("nextPageToken, files(id, name)").execute();
+		FileList result = service.files().list().setPageSize(100).setFields("nextPageToken, files(id, name)").execute();
 		List<File> files = result.getFiles();
 		if (files == null || files.size() == 0) {
 			System.out.println("No files found.");

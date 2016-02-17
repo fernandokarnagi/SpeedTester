@@ -1,6 +1,13 @@
+/**
+Reference
+https://developers.google.com/drive/v3/web/about-sdk
+
+Java SDK
+https://developers.google.com/drive/v3/web/quickstart/java
+
+ */
 package fits.speedtester;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,9 +122,9 @@ public class GoogleDrive {
 	}
 
 	public static void main_list(String[] args) throws IOException {
-		// Build a new authorized API client service.    
+		// Build a new authorized API client service.
 		Drive service = getDriveService();
-  
+
 		// Print the names and IDs for up to 10 files.
 		FileList result = service.files().list().setPageSize(100).setFields("nextPageToken, files(id, name)").execute();
 		List<File> files = result.getFiles();
